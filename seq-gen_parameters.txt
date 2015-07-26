@@ -1,0 +1,26 @@
+seq-gen
+
+-l leave default
+-n leave default
+-p ignore
+-s default
+-d default
+-k leave it - from original tree and evolve from that
+-m GTR
+-a
+
+-i from email (proportion of invariable sites)
+-f from email (equilibrium frequences)
+-r from email (GTR rate matrix)
+
+length= use default
+repetitions = use default
+
+-n use nexus format
+
+then Mr Bayes GTR and invgamma
+
+use command redirection operators to 'pipe' output to a file
+instead of the command prompt
+
+Raxml - run with a smaller -e 0.001 GAMMA
