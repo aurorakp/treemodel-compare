@@ -146,6 +146,7 @@ class LogMapPlotter(object):
                 elif (self.rooted == True):
                     re.match(r'(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?;)',tree)
                     if not m:
+                        print("Tree that caused error: " + tree)
                         print("Error:  can't change interior edges lengths")
                         exit
                     tree = m.group(1) + '0.000000001' + m.group(2) + '0.000000001' + m.group(3) + '0.000000001' + m.group(4)
@@ -246,7 +247,7 @@ class LogMapPlotter(object):
     def plot_coords_all(self):
         os.chdir(self.treehome)
         if not os.path.exists(self.plots_all):
-            allplot = make_rplotscript(self.treehome, self.all_topos_coords_centre1, self.tree_name + " All Topologies Relative to Centre 1 Logmap", aspect_ratio=1, mean=False, majority=False)
+            allplot = make_rplotscript(self.treehome, self.all_topos_coords_centre1, self.tree_name + " All Topologies Relative to Centre 1 Logmap", aspect_ratio=1, outdir = self.treehome, mean=False, majority=False)
             allplot.rplot()
             allplot.setNormFile(self.treehome + self.tree_name + "_" + self.model + "_norms.txt")
             allplot.rplotnorm()

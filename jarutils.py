@@ -23,8 +23,8 @@ def copyTree(tree,basedir,targetdir,textstart=True):
     if not os.path.exists(targetdir + "\\" + tree):
         if (textstart==True):
             shutil.copyfile(basedir + tree + ".txt",targetdir + tree + ".txt")
-        shutil.copyfile(basedir + tree + ".xml", targetdir + tree + ".xml")
-        shutil.copyfile(basedir + tree + "_state.xml", targetdir + tree + "_state.xml")
+        #shutil.copyfile(basedir + tree + ".xml", targetdir + tree + ".xml")
+        #shutil.copyfile(basedir + tree + "_state.xml", targetdir + tree + "_state.xml")
         shutil.copyfile(basedir + tree + ".nex",targetdir + tree + ".nex")
     else:
         print("Tree and NEXUS files already copied for " + tree)

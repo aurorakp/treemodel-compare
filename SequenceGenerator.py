@@ -13,7 +13,7 @@ class SequenceGenerator(object):
     '''
 
 
-    def __init__(self, tree_name, newick_tree_file, seq_dir="c:\\seqgen"):
+    def __init__(self, tree_name, newick_tree_file, evomodel = "K-80", seq_dir="c:\\seqgen"):
         '''
         Constructor
         '''
@@ -23,12 +23,19 @@ class SequenceGenerator(object):
         self.seq_dir = seq_dir
         self.seq_outdir = seq_dir + "\\" + tree_name + "\\"
         self.seq_out = self.seq_outdir + tree_name + ".nex"
+        self.evomodel = evomodel
     
     def runseq_gen(self):
         
+        # Note - seq-gen parameters are taken from the median of those estimated by the four models for the original
+        # seagrass data set.  
+        
         if not os.path.exists(self.seq_outdir):
             os.mkdir(self.seq_outdir)
-            os.system(self.seq_dir + '\\seq-gen ' + '-mGTR' +' -i0.18 ' + '-f0.21,0.31,0.3,0.18 ' + '-r1.5,4.91,1.34,0.83,5.8,1.0 ' + '-on ' + self.newick + ' > ' +  self.seq_out) 
+            if (self.evomodel == "GTR"):
+                os.system(self.seq_dir + '\\seq-gen ' + '-mGTR' +' -i0.2 ' + '-f0.21,0.31,0.3,0.18 ' + '-r1.5,4.91,1.34,0.83,5.8,1.0 ' + '-on ' + self.newick + ' > ' +  self.seq_out)
+            elif (self.evomodel == "K-80"): 
+                os.system(self.seq_dir + '\\seq-gen ' + '-mHKY' +' -i0.2 ' + '-fe ' + '-t5.18 ' + '-on ' + self.newick + ' > ' +  self.seq_out)
             #call(command.split())
         else:
             print "Sequence file already generated - skipping SeqGen run."
