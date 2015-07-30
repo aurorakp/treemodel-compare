@@ -251,3 +251,18 @@ def get_diss_matrix(geo_file_name,diss_file_name,sym_flag):
             o.write(str(diss_matrix[row][col]) + ' ')
         o.write('\n')
     o.close()
+    
+def countTopos(topofile, topodir):
+        f = open(topodir + topofile)
+        topNum = 0
+        # Extract the number of topologies from the topology file
+        for line in f:
+            tempStr = line
+            if (tempStr[0:3] != "Raw"):
+                continue
+            else: 
+                trimStr = tempStr.lstrip("Raw topology counts:  ").split()
+                topNum = len(trimStr)
+                break
+        f.close()
+        return topNum

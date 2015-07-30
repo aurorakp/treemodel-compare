@@ -12,6 +12,7 @@ import subprocess
 class distribcompare(object):
     '''
     Takes two tree files, finds their mean tree, and uses a QQ plot to compare the tree distributions
+    Added base tree setter to plot the tree distance from the base tree
     '''
 
 
@@ -28,12 +29,15 @@ class distribcompare(object):
         self.tree_mean_2 = re.sub(r'([.].+)',"",treefile2) + "_mean.txt"
         self.dist_to_mean_1 = re.sub(r'([.].+)',"",treefile1) + "_dist.txt"
         self.dist_to_mean_2 = re.sub(r'([.].+)',"",treefile2) + "_dist.txt"
+        self.tree_base_1 = ""
+        self.tree_base_2 = ""
         if (treefile1 == treefile2):
             raise Exception("Must input tree files with different names.")
         self.sturm_version = mean_jar
         self.analysis_version = analysis_jar
         self.qqdir = qq_dir
         self.qqfileout = qq_dir + "/" + plotname
+        self.qqfileoutbase = qq_dir + "/" + plotname + "_base"
         self.t1rooted = self.rooted_flag(t1rooted)
         self.t2rooted = self.rooted_flag(t2rooted)
         self.xlow = 0.0
@@ -78,6 +82,31 @@ class distribcompare(object):
             subprocess.call(command.split())
         else:
             print "Skipping distances to mean for tree 2 - already done"
+    
+    def set_base(self,basepath1="",basepath2=""):
+        '''
+        Sets the base tree path up; required before running find_disttobase
+        '''
+        self.tree_base_1 = basepath1
+        self.tree_base_2 = basepath2
+        
+        
+    def find_disttobase(self):
+        if(self.tree_base_1 == "" or self.tree_base_2 == ""):
+            print("Bases not set - please run set_base first")
+            exit
+        else:
+            if not os.path.exists(self.dist_to_base_1):
+                command = 'java -jar ' + self.analysis_version + self.t1rooted + ' -a gtp_twofiles -o ' + self.dist_to_base_1 + ' -f '  + self.tree_file_1 + " " + self.tree_base_1
+                subprocess.call(command.split())
+            else:
+                print "Skipping distances to base for tree 1 - already done"
+            if not os.path.exists(self.dist_to_mean_2):
+                command = 'java -jar ' + self.analysis_version + self.t2rooted + ' -a gtp_twofiles -o ' + self.dist_to_base_2 + ' -f '  + self.tree_file_2 + " " + self.tree_base_2
+                subprocess.call(command.split())
+            else:
+                print "Skipping distances to base for tree 2 - already done"
+            
     def qq_plot(self):
         os.chdir(self.qqdir)
         if not os.path.exists(self.qqfileout + ".r"):
@@ -108,8 +137,35 @@ class distribcompare(object):
         else:
             print "Skipping QQ Plot generation - already done"
             
-        
-        
+    def qq_plot_tobase(self):
+        os.chdir(self.qqdir)
+        if not os.path.exists(self.qqfileoutbase + ".r"):
+            qq_out = open(self.qqfileoutbase + ".r",'w')
+            qq_out.write('filename1 <- paste ("' + self.dist_to_base_1 + '",sep="")' + "\n")
+            qq_out.write('filename2 <- paste ("' + self.dist_to_base_2 + '",sep="")' + "\n")
+            qq_out.write('data1 <- read.table(filename1, col.names=c("index1","index2","dist"))' + "\n")
+            qq_out.write('data2 <- read.table(filename2, col.names=c("index1","index2","dist"))' + "\n")
+            qq_out.write('plot_title <- paste("QQ Plot for ' +  re.sub(r'([.].+)',"",self.tree_file_1) +  " and " + re.sub(r'([.].+)',"",self.tree_file_2) +  '",sep="")' + "\n")
+            qq_out.write('xlabel <- paste("Distance to Base Tree for ' + re.sub(r'([.].+)',"",self.tree_file_1)+ '",sep="")' + "\n")
+            qq_out.write('ylabel <- paste("Distance to Base Tree for ' + re.sub(r'([.].+)',"",self.tree_file_2)+ '",sep="")' + "\n")
+            qq_out.write('outfile_pdf <- paste("' + self.qqfileoutbase + '.pdf",sep="")' + "\n")
+            qq_out.write('outfile_png <- paste("' + self.qqfileoutbase + '.png",sep="")' + "\n")
+            qq_out.write('pdf(outfile_pdf)' + "\n")
+            qq_out.write('qqplot(data1$dist, data2$dist, plot.it = TRUE, main = plot_title, xlim = c(' + str(self.xlow) + ',' + str(self.xhigh) + '), ylim = c(' + str(self.ylow) + ',' + str(self.yhigh) + '), xlab = xlabel, ylab = ylabel, asp=1)' + "\n")
+            qq_out.write('abline(a=0,b=1,untf=FALSE)' + "\n")
+            qq_out.write('dev.off()' + "\n")
+            qq_out.write('png(outfile_png,width=1000,height=1000)' + "\n")
+            qq_out.write('qqplot(data1$dist, data2$dist, plot.it = TRUE, main = plot_title, xlim = c(' + str(self.xlow) + ',' + str(self.xhigh) + '), ylim = c(' + str(self.ylow) + ',' + str(self.yhigh) + '), xlab = xlabel, ylab = ylabel, asp=1)' + "\n")
+            qq_out.write('abline(a=0,b=1,untf=FALSE)' + "\n")
+            qq_out.write('dev.off()')
+            qq_out.close()
+        else:
+            print "Skipping R script generation - already done"
+        if not os.path.exists(self.qqfileout + ".pdf" or self.qqfileoutbase + ".png"):
+            command = 'rscript ' + self.qqfileoutbase + ".r"
+            subprocess.call(command.split())
+        else:
+            print "Skipping QQ Plot generation - already done"
         
         
         
