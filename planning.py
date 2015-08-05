@@ -3,7 +3,17 @@ Created on Jul 21, 2015
 
 @author: alkpongsema
 
-Steps:
+- BEAST runs for edges and leaves tests
+
+
+- Yeast data setup
+    - jmodeltest2
+    - sampling (without replacement) of genes
+    - set up runs for each model
+    - Topology splits /comparisons
+
+
+Model Steps:
 
 1) Run SeqGen (already set up)
 2) Model prep
