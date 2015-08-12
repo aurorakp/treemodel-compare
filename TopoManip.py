@@ -22,7 +22,8 @@ class TopoManip(object):
         self.modellist = modellist
         self.treefilesuff = treefilesuff
         self.runNum = runNum
-        self.outprefix = ""
+        self.outprefix = self.setOutPrefix()
+        self.topooutprefix = self.setTopoOutPrefix()
     
     
     '''
@@ -30,8 +31,11 @@ class TopoManip(object):
     topos, names, model names, etc.
     and also the topologies (small versions)
     '''
+    
+    def setTopoOutPrefix(self, topooutprefix = "yeastgenes"):
+        self.topooutprefix = topooutprefix
         
-    def setOutPrefix(self,outprefix):
+    def setOutPrefix(self,outprefix="yeastgenes"):
         self.outprefix = outprefix    
         
     def makeheadersuff(self, sims=1):
@@ -51,7 +55,7 @@ class TopoManip(object):
         ## Counts topologies found for each type of simulation
         for j in range(1,self.runNum + 1):
             os.chdir(self.basedir)
-            outfile = open("treeleafgrowstopotable" + str(j) + ".txt",'w')
+            outfile = open(self.topooutprefix + str(j) + ".txt",'w')
             header = "tree," + self.makeheadersuff()
             outfile.write(header)
             for i in range(len(self.treelist)):
@@ -90,10 +94,11 @@ class TopoManip(object):
         ## Outputs a file with the tree topologies in the file listed
         for j in range(1,self.runNum+1):
             os.chdir(self.basedir)
-            outfile = open(self.outprefix + "_topolist.txt",'w')
+            outfile = open(self.outprefix +  "_" + str(j) + "_topolist.txt",'w')
             for i in range(len(self.treelist)):
                 treek = self.treelist[i] + str(j)
-                treeline = treek
+                outfile.write(treek + "\n")
+                treeline = ""
                 
                 for m in range(len(self.modellist)):
                     treedir = self.basedir + "/" + treek + "/" + self.modellist[m] + "/"
@@ -101,15 +106,16 @@ class TopoManip(object):
                     topoCount = countTopos(topofile, treedir)
                     topoline = ""
                     # Parse topology file:
-                    tfile = open(topofile,'r')
+                    tfile = open(treedir + topofile,'r')
                     for line in tfile:
                         temp = line.split()
                         if (re.search(r'([0-9][.])',temp[0]) != None):
                             topoline = topoline + temp[1] + ","
                         elif (temp[0] == "Raw"):
+                            topoline = self.modellist[m] + "," + topoline
                             break
                         else:
                             continue
-                outfile.write(treeline + topoline.rstrip(",") + "\n")
+                    outfile.write(treeline + topoline.rstrip(",") + "\n")
             outfile.close()    
         

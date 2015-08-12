@@ -13,6 +13,7 @@ from jarutils import *
 from LeafNorm import LeafNorm
 from LogMapPlotter import LogMapPlotter
 from distribcompare import distribcompare
+from YeastSample import YeastSample
 
 if __name__ == '__main__':
     tree = "hillisunrooted"
@@ -97,7 +98,7 @@ if __name__ == '__main__':
     treeedgegrowsgtr = ["edge01CDEgtr","edge02CDEgtr","edge04CDEgtr","edge06CDEgtr","edge08CDEgtr","edge10CDEgtr"] 
     treefilesuff = ["_bayes_treeout.txt","_raxml_treeout.txt","_phyml_treeout.txt"]
     models = ["bayes","raxml","phyml"]
-    
+    '''
     treenums = [1,2]
     for j in treenums:
         os.chdir(qq_dir)
@@ -120,7 +121,8 @@ if __name__ == '__main__':
                 treeline = treeline + "," + str(countTopos(topofile,treedir))
             outfile.write(treeline + "\n")
         outfile.close()
-                
+    '''
+               
             
     '''
     for j in range(len(treeleafgrows)):
@@ -167,4 +169,30 @@ if __name__ == '__main__':
                 else:
                     print("QQ comparison plot already made for trees " + treeleafgrows[i] + " and model " + models[m])
     '''
+    #y1 = YeastSample()
+    #y1.loadYeast()
+    #y1.createGeneList()
+    #y1.makeSampledNexusFile()
     
+    #y2 = YeastSample(2)
+    #y2.makeSampledNexusFile()
+    #y2.concatSampNexus()
+    '''
+    YDL215C - 26611-29058 = 2447
+    YMR186W - 72862-74919 = 2057
+    YPL169C - 96292-97071 = 779
+    '''
+    for i in range(1,21):
+        y = YeastSample(i)
+        y.makeSampledNexusFile()
+   
+    yeastset = []
+    for i in range(1,21):
+        yeaststr = "yeast_" + str(i) + "_genes.nex"
+        yeastset.append(yeaststr)
+    for yfile in yeastset:
+        for i in range(1,3):
+            os.chdir(basedir)
+            newyfile = yfile.rstrip(".nex") + str(i) + ".nex"
+            shutil.copy(yfile,newyfile)
+        

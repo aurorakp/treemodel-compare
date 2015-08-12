@@ -30,6 +30,7 @@ class LogMapPlotter(object):
         self.treehome = treehome
         self.topNum = 0
         self.rooted = rooted
+        self.Rpath = "C:\\R-3.2.0\\bin\\Rscript.exe"
                
         # output dirs and prefixes
         self.topo_dir = treehome + "split_by_topology"
@@ -182,9 +183,9 @@ class LogMapPlotter(object):
                 if (self.rooted == True):
                     self.convertRootedCoords(coords_file_name, self.coords_dir)
                 
-                cl = LeafNorm(self.tree_name, self.topo_dir + "/" + topo_file_name, self.treehome, self.model)
-                cl.setNormOut(self.coords_dir + "/" + coords_file_name[:-4] + "_norms.txt")
-                cl.makeNormFiles()
+                #cl = LeafNorm(self.tree_name, self.topo_dir + "/" + topo_file_name, self.treehome, self.model)
+                #cl.setNormOut(self.coords_dir + "/" + coords_file_name[:-4] + "_norms.txt")
+                #cl.makeNormFiles()
             
         else:
                 print "Directory %s already exists - skipping computing the log map coordinates \n" % self.coords_dir
@@ -237,10 +238,11 @@ class LogMapPlotter(object):
                 logplot.rplot()
                 logplot.setNormFile(self.coords_prefix + str(i) + "_norms.txt")
                 logplot.rplotnorm()
-                command = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.coords_dir + "/" + self.coords_filepref + str(i) + '.r'
+                command = self.Rpath + ' ' + self.coords_dir + "/" + self.coords_filepref + str(i) + '.r'
+                #command = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.coords_dir + "/" + self.coords_filepref + str(i) + '.r'
                 subprocess.call(command.split())
-                normcommand =  'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.coords_dir +"/" + self.coords_filepref + str(i) + "_norm3D.r"
-                subprocess.call(normcommand.split())
+                #normcommand =  'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.coords_dir +"/" + self.coords_filepref + str(i) + "_norm3D.r"
+                #subprocess.call(normcommand.split())
         else:
             print "Quadrants already plotted - skipping quadrant creation"
     
@@ -249,12 +251,14 @@ class LogMapPlotter(object):
         if not os.path.exists(self.plots_all):
             allplot = make_rplotscript(self.treehome, self.all_topos_coords_centre1, self.tree_name + " All Topologies Relative to Centre 1 Logmap", aspect_ratio=1, outdir = self.treehome, mean=False, majority=False)
             allplot.rplot()
-            allplot.setNormFile(self.treehome + self.tree_name + "_" + self.model + "_norms.txt")
-            allplot.rplotnorm()
-            command = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre1[0:-4] +  self.ordered + '.r'
+            #allplot.setNormFile(self.treehome + self.tree_name + "_" + self.model + "_norms.txt")
+            #allplot.rplotnorm()
+            #command = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre1[0:-4] +  self.ordered + '.r'
+            command = self.Rpath + ' ' + self.treehome + self.all_topos_coords_centre1[0:-4] +  self.ordered + '.r'
+            print("command is: " + command)
             subprocess.call(command.split())
-            normcommand = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre1[0:-4] +  self.ordered + '_norm3D.r'
-            subprocess.call(normcommand.split())
+            #normcommand = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre1[0:-4] +  self.ordered + '_norm3D.r'
+            #subprocess.call(normcommand.split())
         else:
             print "All topologies already plotted - skipping plot creation"
             

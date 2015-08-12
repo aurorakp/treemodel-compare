@@ -94,6 +94,7 @@ class YeastSample(object):
         infile = open(self.yeastPath,'r')
         lines = infile.readlines()
         for i in range(len(genelinenums)):
+            info_outfile.write(self.geneList[i] + "\n")
             outfile.write(lines[genelinenums[i]+1])
             outfile.write(lines[genelinenums[i]+2])
             outfile.write(lines[genelinenums[i]+3])

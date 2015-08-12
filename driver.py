@@ -29,43 +29,47 @@ if __name__ == '__main__':
     #tree = "seagrass"
     #tree = "hillisunrooted"
     basedir = "c:/seqgen"
-    runNum = 2
-    treeleafgrows = ["leaf01sameedges","leaf02sameedges","leaf04sameedges","leaf06sameedges","leaf08sameedges","leaf10sameedges"]
-    treeedgegrows = ["edge01CDE","edge02CDE","edge04CDE","edge06CDE","edge08CDE","edge10CDE"] 
-    treeleafgrowsgtr = ["leaf01sameedgesgtr","leaf02sameedgesgtr","leaf04sameedgesgtr","leaf06sameedgesgtr","leaf08sameedgesgtr","leaf10sameedgesgtr"]
-    treeedgegrowsgtr = ["edge01CDEgtr","edge02CDEgtr","edge04CDEgtr","edge06CDEgtr","edge08CDEgtr","edge10CDEgtr"] 
+    runNum = 3
+    #treeleafgrows = ["leaf01sameedges","leaf02sameedges","leaf04sameedges","leaf06sameedges","leaf08sameedges","leaf10sameedges"]
+    #treeedgegrows = ["edge01CDE","edge02CDE","edge04CDE","edge06CDE","edge08CDE","edge10CDE"] 
+    #treeleafgrowsgtr = ["leaf01sameedgesgtr","leaf02sameedgesgtr","leaf04sameedgesgtr","leaf06sameedgesgtr","leaf08sameedgesgtr","leaf10sameedgesgtr"]
+    #treeedgegrowsgtr = ["edge01CDEgtr","edge02CDEgtr","edge04CDEgtr","edge06CDEgtr","edge08CDEgtr","edge10CDEgtr"] 
        
     tree = ""
-    
+    yeastset = []
+    for i in range(1,21):
+        yeaststr = "yeast_" + str(i) + "_genes"
+
+        yeastset.append(yeaststr)
     #for i in range(len(treeleafgrows)):
     #    tree = treeleafgrows[i]
     
     #for i in range(len(treeleafgrowsgtr)):
     #    tree = treeleafgrowsgtr[i]
-    for i in range(len(treeleafgrows)):
-        tree = treeleafgrows[i]
+        for i in range(len(yeastset)):
+            tree = yeastset[i]
     
         # 1. Sequence generation
-        makeSeq(runNum, tree, "GTR")
+        #makeSeq(runNum, tree, "GTR")
         # convert Beauti
         # Create 'treehomes':
-        '''
-        for i in range(1,runNum):
-            if not os.path.exists(basedir + "/" + tree + str(i) + "/" + tree + str(i) + ".nex"):
-                os.chdir(basedir)
-                treedir = basedir + "/" + tree + str(i) + "/"
-                os.mkdir(treedir)
-                copyTree(tree + str(i),basedir + "/",treedir,False)
-            else:
-                print("Sequences already set up for " + tree + str(i) + " - skipping")
-        '''
+        
+            for i in range(1,runNum):
+                if not os.path.exists(basedir + "/" + tree + str(i) + "/" + tree + str(i) + ".nex"):
+                    os.chdir(basedir)
+                    treedir = basedir + "/" + tree + str(i) + "/"
+                    os.mkdir(treedir)
+                    copyTree(tree + str(i),basedir + "/",treedir,False)
+                else:
+                    print("Sequences already set up for " + tree + str(i) + " - skipping")
+        
         #for i in range(len(treeleafgrowsgtr)):
         #    tree = treeleafgrowsgtr[i]
-        for i in range(len(treeleafgrows)):
-            tree = treeleafgrows[i]
-            '''
+        for i in range(len(yeastset)):
+            tree = yeastset[i]
+            
                 # 2. Models
-            for i in range(1,runNum+1):
+            for i in range(1,runNum):
                 
                 treeBayes = MrBayesObj(tree + str(i))
                 treeBayes.prep(False)
@@ -85,10 +89,10 @@ if __name__ == '__main__':
                 treeBEAST.runTreeouts()
                    
                 
-                treePhyML = PhyMLObj(tree + str(i))
-                treePhyML.prep()
-                treePhyML.run()
-                treePhyML.runTreeouts()
+                #treePhyML = PhyMLObj(tree + str(i))
+                #treePhyML.prep()
+                #treePhyML.run()
+                #treePhyML.runTreeouts()
             '''
             # 3. .jar processing and LeafNorms
                 #models = ["bayes","raxml","BEAST","phyml"]
@@ -138,5 +142,5 @@ if __name__ == '__main__':
                     #orderByLogMap(tree + str(i), basedir + "/" + tree + str(i), models[m], best=False, orderby=1, bynorm=False)
                     #orderByLogMap(tree + str(i), basedir + "/" + tree + str(i), models[m], best=False, orderby=1, bynorm=True)
                     
-            
+            '''
        
