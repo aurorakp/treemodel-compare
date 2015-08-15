@@ -37,7 +37,7 @@ if __name__ == '__main__':
        
     tree = ""
     yeastset = []
-    for i in range(1,21):
+    for i in range(19,21):
         yeaststr = "yeast_" + str(i) + "_genes"
 
         yeastset.append(yeaststr)
@@ -70,7 +70,7 @@ if __name__ == '__main__':
             
                 # 2. Models
             for i in range(1,runNum):
-                
+                '''
                 treeBayes = MrBayesObj(tree + str(i))
                 treeBayes.prep(False)
                 #treeBayes.prepScript(nst=2,rates="gamma")
@@ -87,12 +87,12 @@ if __name__ == '__main__':
                 treeBEAST.prep()
                 treeBEAST.run()
                 treeBEAST.runTreeouts()
-                   
+                 '''  
                 
-                #treePhyML = PhyMLObj(tree + str(i))
-                #treePhyML.prep()
-                #treePhyML.run()
-                #treePhyML.runTreeouts()
+                treePhyML = PhyMLObj(tree + str(i))
+                treePhyML.prep()
+                treePhyML.run()
+                treePhyML.runTreeouts()
             '''
             # 3. .jar processing and LeafNorms
                 #models = ["bayes","raxml","BEAST","phyml"]
