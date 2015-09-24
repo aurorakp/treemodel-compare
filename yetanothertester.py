@@ -12,12 +12,12 @@ if __name__ == '__main__':
     
     basedir = "c:/seqgen"
     yeastset = []
-    runNum = 2
-    for i in range(1,8):
+    runNum = 1
+    for i in range(1,21):
         yeaststr = "yeast_" + str(i) + "_genes"
 
         yeastset.append(yeaststr)
-        
+    '''    
     for i in range(len(yeastset)):
         tree = yeastset[i]
 # 3. .jar processing and LeafNorms
@@ -25,7 +25,7 @@ if __name__ == '__main__':
         models = ["bayes","raxml","BEAST","phyml"]
             # Generate mean tree, distance files, and distance matrices:
         
-    '''    
+        
         for i in range(1,runNum+1):
             for m in range(len(models)):
                 model_dir = "/" + models[m] + "/"
@@ -54,21 +54,21 @@ if __name__ == '__main__':
                 #treefiles = [tree + str(i) + "_bayes_treeout.txt",tree + str(i) + "_raxml_treeout.txt",tree + str(i) + "_phyml_treeout.txt"]
                 #treefiles = [tree + str(i) + "_BEAST_treeout.txt"]
                 treefiles = [tree + str(i) + "_bayes_treeout.txt",tree + str(i) + "_raxml_treeout.txt",tree + str(i) + "_BEAST_treeout.txt",tree + str(i) + "_phyml_treeout.txt"]
-                '''
-    '''
+                
+    
                 if (models[m] == "BEAST"):
-                    pass
+                    
                     
                     logplot = LogMapPlotter(tree + str(i), treefiles[m], treehome, models[m], rooted=True)
                     logplot.split_topos()
                     logplot.make_centres()
-                    logplot.make_coords()
+                    #logplot.make_coords()
                     #os.remove(tree + str(i) + "_" + models[m] + "_allcoords.r")
                     #os.remove(tree + str(i) + "_" + models[m] + "_allcoords_norm3D.r")
-                    logplot.plot_coords_all()
-                    logplot.plot_coords_quads()
-                '''
-    '''    
+                    #logplot.plot_coords_all()
+                    #logplot.plot_coords_quads()
+                
+        
                 if (models[m] != "BEAST"):
                     logplot = LogMapPlotter(tree + str(i), treefiles[m], treehome, models[m], rooted=False)
                     logplot.split_topos()
@@ -83,14 +83,29 @@ if __name__ == '__main__':
                 #orderByLogMap(tree + str(i), basedir + "/" + tree + str(i), models[m], best=False, orderby=1, bynorm=False)
                 #orderByLogMap(tree + str(i), basedir + "/" + tree + str(i), models[m], best=False, orderby=1, bynorm=True)
              
-    '''    
+    '''  
     #yeastSetNum = []
     #for j in range(1,runNum+1):
     #    for k in range(len(yeastset)):
     #        yeastSetNum.append(yeastset[k] + str(j))
-
-    firstfive = TopoManip(yeastset, modellist = ["bayes","raxml","phyml"], treefilesuff = ["_bayes_treeout.txt","_raxml_treeout.txt","_phyml_treeout.txt"], runNum=2, basedir="c:/seqgen")
+    models = ["bayes","raxml","BEAST","phyml"]
+    '''
+    firstfive = TopoManip(yeastset, modellist = ["bayes","raxml","BEAST","phyml"], treefilesuff = ["_bayes_treeout.txt","_raxml_treeout.txt","_phyml_treeout.txt"], runNum=1, basedir="c:/seqgen")
     firstfive.setOutPrefix("yeasttest")
     firstfive.setTopoOutPrefix("yeast_topos_run")   
     firstfive.countToposOut()
     firstfive.listTopos()
+    firstfive.listEachTopo()
+    '''
+    for i in range(1,runNum+1):
+        for yst in yeastset:
+            for m in range(len(models)):
+                model_dir = "/" + models[m] + "/"
+                treehome = "c:/seqgen/" + yst + str(i) + model_dir
+                if not (m == "BEAST"):
+                    #findSplits(yst + str(i), treehome, models[m])
+                    distTreesAnotherTree(yst + str(i), models[m], rooted=False)
+                if (m == "BEAST"):
+                    distTreesAnotherTree(yst + str(i), models[m], rooted=True)
+                    #findSplits(yst + str(i), treehome, models[m], True)
+                

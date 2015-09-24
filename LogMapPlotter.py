@@ -30,7 +30,7 @@ class LogMapPlotter(object):
         self.treehome = treehome
         self.topNum = 0
         self.rooted = rooted
-        self.Rpath = "C:\\R-3.2.0\\bin\\Rscript.exe"
+        self.Rpath = "C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe"
                
         # output dirs and prefixes
         self.topo_dir = treehome + "split_by_topology"
@@ -180,8 +180,8 @@ class LogMapPlotter(object):
                 
                 coords_file_name = "coords_" + str(i) + ".txt"
                 
-                if (self.rooted == True):
-                    self.convertRootedCoords(coords_file_name, self.coords_dir)
+                #if (self.rooted == True):
+                #    self.convertRootedCoords(coords_file_name, self.coords_dir)
                 
                 #cl = LeafNorm(self.tree_name, self.topo_dir + "/" + topo_file_name, self.treehome, self.model)
                 #cl.setNormOut(self.coords_dir + "/" + coords_file_name[:-4] + "_norms.txt")

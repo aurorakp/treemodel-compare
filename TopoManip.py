@@ -118,4 +118,30 @@ class TopoManip(object):
                             continue
                     outfile.write(treeline + topoline.rstrip(",") + "\n")
             outfile.close()    
+    
+    def masterList(self):
+        header = "tree model topo treespertopo"
         
+        
+    def listEachTopo(self):
+        for j in range(1,self.runNum+1):
+            os.chdir(self.basedir)
+            for i in range(len(self.treelist)):
+                treek = self.treelist[i] + str(j)
+                outfile = open(treek + "_" + "treespertopo.txt",'w')
+                for m in range(len(self.modellist)):
+                    treedir = self.basedir + "/" + treek + "/" + self.modellist[m] + "/"
+                    topofile = treek + "_" + self.modellist[m] + "_tree_topo.txt"
+                    treeline = self.modellist[m] + " "
+                    infile = open(treedir + topofile,'r')
+                    rawflag = False
+                    for line in infile:
+                        temp = line.split()
+                        if (temp[0] == "Raw"):
+                            treeline = treeline + line.lstrip("Raw topology counts:  ")
+                            outfile.write(treeline)
+                            rawflag = True
+                        if (rawflag == True):
+                            break
+                    infile.close()
+                outfile.close()

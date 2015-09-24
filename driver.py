@@ -37,7 +37,7 @@ if __name__ == '__main__':
        
     tree = ""
     yeastset = []
-    for i in range(19,21):
+    for i in range(17,19):
         yeaststr = "yeast_" + str(i) + "_genes"
 
         yeastset.append(yeaststr)
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         #makeSeq(runNum, tree, "GTR")
         # convert Beauti
         # Create 'treehomes':
-        
+        '''
             for i in range(1,runNum):
                 if not os.path.exists(basedir + "/" + tree + str(i) + "/" + tree + str(i) + ".nex"):
                     os.chdir(basedir)
@@ -62,7 +62,7 @@ if __name__ == '__main__':
                     copyTree(tree + str(i),basedir + "/",treedir,False)
                 else:
                     print("Sequences already set up for " + tree + str(i) + " - skipping")
-        
+        '''
         #for i in range(len(treeleafgrowsgtr)):
         #    tree = treeleafgrowsgtr[i]
         for i in range(len(yeastset)):
@@ -87,7 +87,7 @@ if __name__ == '__main__':
                 treeBEAST.prep()
                 treeBEAST.run()
                 treeBEAST.runTreeouts()
-                 '''  
+                 
                 
                 treePhyML = PhyMLObj(tree + str(i))
                 treePhyML.prep()

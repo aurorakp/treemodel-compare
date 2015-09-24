@@ -266,3 +266,33 @@ def countTopos(topofile, topodir):
                 break
         f.close()
         return topNum
+    
+def findSplits(tree, treehome, model, rooted=False):
+    os.chdir(treehome)
+    treefile = tree + "_" + model + "_treeout.txt"
+    splitout = tree + "_" + model + "_splits.txt"
+    analysis_version = "analysis_140702.jar"
+    if (rooted == False):
+        rootprefix = " -u "
+    else:
+        rootprefix = " "
+    command = "java -jar " + analysis_version + rootprefix + " -a split_count -o " + splitout + " " + treefile
+    call(command.split())
+    
+def distTreesAnotherTree(treename, treemodel, rooted=False, anothertreefile = "Rokas_consensus.txt",anotherdir = "c:/seqgen/", outfilesuff = "_dist_toRokas.txt",):
+    treehome = "c:/seqgen/" + treename + "/" + treemodel + "/"
+    os.chdir(treehome)
+    shutil.copy(anotherdir + anothertreefile, treehome + anothertreefile)
+    analysis_version = "analysis_140702.jar"
+    treeout = treename + "_" + treemodel + "_" + "treeout.txt"
+    distout = treename + outfilesuff
+    if (rooted == False):
+        rootedflag = " -u "
+    else:
+        rootedflag = " "
+    if not os.path.exists(distout):
+            command = 'java -jar ' + analysis_version + rootedflag + ' -a gtp_twofiles -o ' + distout + ' -f '  + treeout + " " + anothertreefile
+            call(command.split())
+    else:
+        print "Skipping distances to " + anothertreefile + " - already done"
+    
