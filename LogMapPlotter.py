@@ -79,7 +79,7 @@ class LogMapPlotter(object):
             command = "java -jar " + analysis_version + " -a topology_count -o " + trees_topo_file_name + " " + self.trees_file_name
             subprocess.call(command.split())
         else:
-            print "File %s already exists - skipping generating topology info about all means \n" % trees_topo_file_name
+            print "File %s already exists - skipping generating topology info about trees \n" % trees_topo_file_name
     
     
         if not os.path.exists(self.topo_dir):
@@ -87,7 +87,7 @@ class LogMapPlotter(object):
                        
             topology_file_splitter.makeFiles(self.trees_file_name,self.trees_topo_name,self.topo_prefix)
         else:
-            print "Directory %s already exists - skipping splitting the means by topology \n" % self.topo_dir
+            print "Directory %s already exists - skipping splitting the trees by topology \n" % self.topo_dir
 
     # Make a set of files with the tree with each topology and 0 branch lengths to use as log map center.
     def make_centres(self):

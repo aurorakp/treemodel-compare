@@ -6,6 +6,8 @@ def main(trees, topology, treeBase):
     makeFiles(trees,topology,treeBase)
 
 '''
+Created by D. Vargas and M. Owen Summer 2014
+
 This program depends on analysis jar if you are running main or groupTrees
 
 main('trees.txt','topology.txt','files/trees.txt')
