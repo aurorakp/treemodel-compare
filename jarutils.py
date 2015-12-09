@@ -295,4 +295,7 @@ def distTreesAnotherTree(treename, treemodel, rooted=False, anothertreefile = "R
             call(command.split())
     else:
         print "Skipping distances to " + anothertreefile + " - already done"
-    
+
+def zipUp(archiveName):
+    command = "C:\\Program Files\\7-Zip\\7zG.exe a -t7z " + archiveName + " centres/ coords/ quadrant_plots/ split_by_topology/"
+    call(command.split())

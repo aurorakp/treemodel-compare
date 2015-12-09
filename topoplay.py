@@ -7,6 +7,7 @@ import os
 import shutil
 from subprocess import call
 import topology_file_splitter
+import re
 
 if __name__ == '__main__':
     
@@ -108,10 +109,10 @@ if __name__ == '__main__':
     for i in range(1,geneNum + 1):
         for m in range(len(models)):
             modeldir = models[m] + "/"
-            topoloc = basedir + modeldir
-            topofile = topoloc + "yeast_" + geneNum + "_genes1_" + models[m] + "_tree_topo.txt"
+            topoloc = basedir + "yeast_" + str(i) + "_genes1/" + modeldir
+            topofile = topoloc + "yeast_" + str(i) + "_genes1_" + models[m] + "_tree_topo.txt"
             infile = open(topofile,'r')
-            outfile = open(yeasttopodir + "/yeast_" + geneNum + "_" + models[m] + "_toposummary.txt",'w')
+            outfile = open(yeasttopodir + "/yeast_" + str(i) + "_" + models[m] + "_toposummary.txt",'w')
             outfile.write("topology treeNumber" + "\n")
             stop = False
             topo = False
@@ -119,13 +120,35 @@ if __name__ == '__main__':
             for line in infile:
                 
                 temp = line.split()
+                
+                # If you hit the 'Raw topology counts' line, you are done:
+                
                 if (temp[0] == "Raw"):
                     stop = True
+                elif (stop == True):
+                    break
+             
                 else:
-                    m = re.match(r'([0-9]).',temp[0])
-                    if m:
-                        # write the topo
-                        # write the # on the next line
+                    
+                    # If you found a topology listed on the previous line, get the number of
+                    # trees in that topology and write the line 
+                    
+                    if (topo == True):
+                        linewrite = linewrite + " " + temp[0] + "\n"
+                        outfile.write(linewrite)
+                        topo = False
+                        linewrite = ""
+                    
+                    # Look for the topology list and save it to the line to write:
+                        
+                    else:
+                        m = re.match(r'([0-9]).',temp[0])
+                        if m:
+                            linewrite = linewrite +  temp[1]
+                            topo = True
+                            
+            
+            outfile.close()        
                         
                         
                             

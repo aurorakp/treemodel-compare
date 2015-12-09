@@ -57,11 +57,15 @@ class BayesExtract(object):
             t_length = t_length + 1
         t_file.close()
         
+        
+        
         # Process the t file for the desired number of trees by filling the appropriate
         # lists starting treeNum from file end, subtracting 1 for the "end;" line
         t_file = open(self.tfile,'r')
         t_start = t_length - self.treeNum -1  
         t_counter =1
+        
+        
         
         for line in t_file:
             if (t_counter < t_start):
@@ -70,6 +74,7 @@ class BayesExtract(object):
                 t_counter = t_counter + 1
                 temp = line.split()
                 if temp[0] != "end;" and temp[0] != "":
+                    
                     trees.append(temp[4].strip())
             
         t_file.close()

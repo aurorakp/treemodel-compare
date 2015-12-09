@@ -26,7 +26,7 @@ class LogMapPlotter(object):
         self.trees_file_name = treefile
         self.trees_topo_name = self.tree_name + "_" + model + "_" + "tree_topo.txt"
         self.ordered = self.setOrdered()
-        self.all_topos_coords_centre1 = self.tree_name + "_" + model + self.ordered + "_allcoords.txt"
+        self.all_topos_coords_centre = self.tree_name + "_" + model + self.ordered + "_allcoords.txt"
         self.treehome = treehome
         self.topNum = 0
         self.rooted = rooted
@@ -90,30 +90,8 @@ class LogMapPlotter(object):
             print "Directory %s already exists - skipping splitting the trees by topology \n" % self.topo_dir
 
     # Make a set of files with the tree with each topology and 0 branch lengths to use as log map center.
-    def make_centres(self):
-        os.chdir(self.treehome)
-        f = open(self.trees_file_name)
-        tree = f.readline()
-        # Note: below methods work with trees in scientific notation as adding an 'e-003' at the end only makes
-        # the centre smaller and closer to the origin - has no significant effect on the tree
-        if not (self.rooted==True):
-            m = re.match(r'(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.+;)',tree)
-            if not m:
-                    print("Error:  can't change interior edges lengths")
-                    exit
-            tree = m.group(1) + '0.000000001' + m.group(2) + '0.000000001' + m.group(3)
-        if (self.rooted==True):
-            m = re.match(r'(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?;)',tree)
-            if not m:
-                print("Error:  can't change interior edges lengths")
-                exit
-            tree = m.group(1) + '0.000000001' + m.group(2) + '0.000000001' + m.group(3) + '0.000000001' + m.group(4)
-            if (tree[-1] != ";"):
-                tree = tree + ";"
-        out = open(self.centre_all_prefix + str(1),'w')
-        out.write(tree + '\n')
-        out.close()
-        f.close()
+    def make_centres(self,desiredTopo=1):
+        
         
         if not os.path.exists(self.centre_dir):
             os.mkdir(self.centre_dir)
@@ -158,16 +136,42 @@ class LogMapPlotter(object):
                 out.write(tree + '\n')
                 out.close()
                 f.close()
-    
+    # First, for the 'overall' center, make sure to use the first tree for the topology we want
+        tree_file_name = self.topo_dir + '/topo' + str(desiredTopo) + '.txt'
+        os.chdir(self.topo_dir)
+        f = open(tree_file_name)
+        tree = f.readline()
+        # Note: below methods work with trees in scientific notation as adding an 'e-003' at the end only makes
+        # the centre smaller and closer to the origin - has no significant effect on the tree
+        if not (self.rooted==True):
+            m = re.match(r'(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.+;)',tree)
+            if not m:
+                    print("Error:  can't change interior edges lengths")
+                    exit
+            tree = m.group(1) + '0.000000001' + m.group(2) + '0.000000001' + m.group(3)
+        if (self.rooted==True):
+            m = re.match(r'(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?;)',tree)
+            if not m:
+                print("Error:  can't change interior edges lengths")
+                exit
+            tree = m.group(1) + '0.000000001' + m.group(2) + '0.000000001' + m.group(3) + '0.000000001' + m.group(4)
+            if (tree[-1] != ";"):
+                tree = tree + ";"
+        out = open(self.centre_all_prefix,'w')
+        out.write(tree + '\n')
+        out.close()
+        f.close()
+        
     
         
     # Compute the log map coords for each topology file.  Just use the first tree in the file
     # as centre tree.
     
-    def make_coords(self):
+    def make_coords(self, desiredTopo=1):
                 
         if not os.path.exists(self.coords_dir):
             os.mkdir(self.coords_dir)
+            os.chdir(self.treehome)
             for topo_file_name in os.listdir(self.topo_dir):
                 # get the number at the end of the file name
                 match_file_name = re.match(r'topo([0-9]+).txt',topo_file_name)
@@ -191,12 +195,12 @@ class LogMapPlotter(object):
                 print "Directory %s already exists - skipping computing the log map coordinates \n" % self.coords_dir
         
         os.chdir(self.treehome)
-        if not os.path.exists(self.all_topos_coords_centre1):
+        if not os.path.exists(self.all_topos_coords_centre):
             if (self.rooted == False):
-                command = 'java -jar ' + self.analysis_version + ' -u -a log_map -o ' + self.all_topos_coords_centre1 + ' -f ' + self.centre_prefix + "1" + ' ' + self.trees_file_name
+                command = 'java -jar ' + self.analysis_version + ' -u -a log_map -o ' + self.all_topos_coords_centre + ' -f ' + self.centre_prefix + "1" + ' ' + self.trees_file_name
                 subprocess.call(command.split())
             else:
-                command = 'java -jar ' + self.analysis_version + ' -a log_map -o ' + self.all_topos_coords_centre1 + ' -f ' + self.centre_prefix + "1" + ' ' + self.trees_file_name
+                command = 'java -jar ' + self.analysis_version + ' -a log_map -o ' + self.all_topos_coords_centre + ' -f ' + self.centre_prefix + "1" + ' ' + self.trees_file_name
                 subprocess.call(command.split())
                 
     
@@ -249,15 +253,15 @@ class LogMapPlotter(object):
     def plot_coords_all(self):
         os.chdir(self.treehome)
         if not os.path.exists(self.plots_all):
-            allplot = make_rplotscript(self.treehome, self.all_topos_coords_centre1, self.tree_name + " All Topologies Relative to Centre 1 Logmap", aspect_ratio=1, outdir = self.treehome, mean=False, majority=False)
+            allplot = make_rplotscript(self.treehome, self.all_topos_coords_centre, self.tree_name + " All Topologies Relative to Centre 1 Logmap", aspect_ratio=1, outdir = self.treehome, mean=False, majority=False)
             allplot.rplot()
             #allplot.setNormFile(self.treehome + self.tree_name + "_" + self.model + "_norms.txt")
             #allplot.rplotnorm()
-            #command = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre1[0:-4] +  self.ordered + '.r'
-            command = self.Rpath + ' ' + self.treehome + self.all_topos_coords_centre1[0:-4] +  self.ordered + '.r'
+            #command = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre[0:-4] +  self.ordered + '.r'
+            command = self.Rpath + ' ' + self.treehome + self.all_topos_coords_centre[0:-4] +  self.ordered + '.r'
             print("command is: " + command)
             subprocess.call(command.split())
-            #normcommand = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre1[0:-4] +  self.ordered + '_norm3D.r'
+            #normcommand = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre[0:-4] +  self.ordered + '_norm3D.r'
             #subprocess.call(normcommand.split())
         else:
             print "All topologies already plotted - skipping plot creation"
