@@ -123,7 +123,7 @@ class LogMapPlotter(object):
                     tree = m.group(1) + '0.000000001' + m.group(2) + '0.000000001' + m.group(3)
                 
                 elif (self.rooted == True):
-                    re.match(r'(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?;)',tree)
+                    m = re.match(r'(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?\):)[0-9]+[.][0-9]+(.*?;)',tree)
                     if not m:
                         print("Tree that caused error: " + tree)
                         print("Error:  can't change interior edges lengths")
@@ -168,31 +168,31 @@ class LogMapPlotter(object):
     # as centre tree.
     
     def make_coords(self, desiredTopo=1):
-                
-        if not os.path.exists(self.coords_dir):
-            os.mkdir(self.coords_dir)
-            os.chdir(self.treehome)
-            for topo_file_name in os.listdir(self.topo_dir):
-                # get the number at the end of the file name
-                match_file_name = re.match(r'topo([0-9]+).txt',topo_file_name)
-                i = int(match_file_name.group(1))
-                if (self.rooted == False):
-                    command = 'java -jar ' + self.analysis_version + ' -u -a log_map -o ' + self.coords_prefix + str(i) + '.txt -f ' + self.centre_prefix + str(i) + ' ' + self.topo_dir +'/' + topo_file_name
-                else:
-                    command = 'java -jar ' + self.analysis_version + ' -a log_map -o ' + self.coords_prefix + str(i) + '.txt -f ' + self.centre_prefix + str(i) + ' ' + self.topo_dir +'/' + topo_file_name   
-                subprocess.call(command.split())
-                
-                coords_file_name = "coords_" + str(i) + ".txt"
-                
-                #if (self.rooted == True):
-                #    self.convertRootedCoords(coords_file_name, self.coords_dir)
-                
-                #cl = LeafNorm(self.tree_name, self.topo_dir + "/" + topo_file_name, self.treehome, self.model)
-                #cl.setNormOut(self.coords_dir + "/" + coords_file_name[:-4] + "_norms.txt")
-                #cl.makeNormFiles()
-            
-        else:
-                print "Directory %s already exists - skipping computing the log map coordinates \n" % self.coords_dir
+        #'''        
+        #if not os.path.exists(self.coords_dir):
+        #    os.mkdir(self.coords_dir)
+        #    os.chdir(self.treehome)
+        #    for topo_file_name in os.listdir(self.topo_dir):
+        #        # get the number at the end of the file name
+        #        match_file_name = re.match(r'topo([0-9]+).txt',topo_file_name)
+        #        i = int(match_file_name.group(1))
+        #        if (self.rooted == False):
+        #            command = 'java -jar ' + self.analysis_version + ' -u -a log_map -o ' + self.coords_prefix + str(i) + '.txt -f ' + self.centre_prefix + str(i) + ' ' + self.topo_dir +'/' + topo_file_name
+        #        else:
+        #            command = 'java -jar ' + self.analysis_version + ' -a log_map -o ' + self.coords_prefix + str(i) + '.txt -f ' + self.centre_prefix + str(i) + ' ' + self.topo_dir +'/' + topo_file_name   
+        #        subprocess.call(command.split())
+        #        
+        #        coords_file_name = "coords_" + str(i) + ".txt"
+        #        
+        #        if (self.rooted == True):
+        #            self.convertRootedCoords(coords_file_name, self.coords_dir)
+        #        
+        #        #cl = LeafNorm(self.tree_name, self.topo_dir + "/" + topo_file_name, self.treehome, self.model)
+        #        #cl.setNormOut(self.coords_dir + "/" + coords_file_name[:-4] + "_norms.txt")
+        #        #cl.makeNormFiles()
+        #    
+        #else:
+        #        print "Directory %s already exists - skipping computing the log map coordinates \n" % self.coords_dir
         
         os.chdir(self.treehome)
         if not os.path.exists(self.all_topos_coords_centre):
@@ -202,6 +202,8 @@ class LogMapPlotter(object):
             else:
                 command = 'java -jar ' + self.analysis_version + ' -a log_map -o ' + self.all_topos_coords_centre + ' -f ' + self.centre_prefix + "1" + ' ' + self.trees_file_name
                 subprocess.call(command.split())
+                coords_file_name = self.all_topos_coords_centre
+                self.convertRootedCoords(coords_file_name, self.treehome.rstrip("//"))
                 
     
     def convertRootedCoords(self, treecoordfile, treecoordsdir):
@@ -225,7 +227,7 @@ class LogMapPlotter(object):
         infile.close()
         outfile.close()
         os.remove(treecoordfile)
-        shutil.copy('tempcoords.txt',treecoordsdir + treecoordfile)
+        shutil.copy('tempcoords.txt',treecoordsdir + "/" +  treecoordfile)
         os.remove('tempcoords.txt')
         
     def plot_coords_quads(self):
@@ -240,8 +242,8 @@ class LogMapPlotter(object):
                 os.chdir(self.plots_dir)
                 logplot = make_rplotscript(self.coords_dir, self.coords_filepref + str(i) + '.txt', self.tree_name + " Topology " + str(i) + " Logmap", aspect_ratio=1, outdir = self.plots_dir, mean=False, majority=False)
                 logplot.rplot()
-                logplot.setNormFile(self.coords_prefix + str(i) + "_norms.txt")
-                logplot.rplotnorm()
+                #logplot.setNormFile(self.coords_prefix + str(i) + "_norms.txt")
+                #logplot.rplotnorm()
                 command = self.Rpath + ' ' + self.coords_dir + "/" + self.coords_filepref + str(i) + '.r'
                 #command = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.coords_dir + "/" + self.coords_filepref + str(i) + '.r'
                 subprocess.call(command.split())
@@ -258,7 +260,7 @@ class LogMapPlotter(object):
             #allplot.setNormFile(self.treehome + self.tree_name + "_" + self.model + "_norms.txt")
             #allplot.rplotnorm()
             #command = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre[0:-4] +  self.ordered + '.r'
-            command = self.Rpath + ' ' + self.treehome + self.all_topos_coords_centre[0:-4] +  self.ordered + '.r'
+            command = self.Rpath + ' ' + self.treehome + "/" + self.all_topos_coords_centre[0:-4] +  self.ordered + '.r'
             print("command is: " + command)
             subprocess.call(command.split())
             #normcommand = 'C:\\Rstuff\\R-3.2.0\\bin\\Rscript.exe ' + self.treehome + self.all_topos_coords_centre[0:-4] +  self.ordered + '_norm3D.r'

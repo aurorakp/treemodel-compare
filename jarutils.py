@@ -15,7 +15,7 @@ def copyjars(treehome):
     analysis_version = "analysis_140702.jar"
     
     if not os.path.exists(treehome + gtp_version):
-        shutil.copyfile('c:\\seqgen\\jars\\' + gtp_version, treehome + gtp_version)
+        shutil.copyfile('c:/seqgen/jars/' + gtp_version, treehome + gtp_version)
     if not os.path.exists(treehome + analysis_version):
         shutil.copyfile('c:/seqgen/jars/' + analysis_version, treehome + analysis_version)
         

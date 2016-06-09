@@ -18,7 +18,7 @@ class make_rplotscript(object):
         Constructor
         '''
         self = self
-        self.filename = file_dir + "/" + file_name 
+        self.filename = file_dir + file_name 
         self.title = plot_title
         self.filepath = file_dir + "/" + file_name[0:-4]
         self.outdir = outdir

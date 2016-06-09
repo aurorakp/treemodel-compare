@@ -118,12 +118,12 @@ class distribcompare(object):
             qq_out.write('plot_title <- paste("QQ Plot for ' +  re.sub(r'([.].+)',"",self.tree_file_1) +  " and " + re.sub(r'([.].+)',"",self.tree_file_2) +  '",sep="")' + "\n")
             qq_out.write('xlabel <- paste("Distance to Mean Tree for ' + re.sub(r'([.].+)',"",self.tree_file_1)+ '",sep="")' + "\n")
             qq_out.write('ylabel <- paste("Distance to Mean Tree for ' + re.sub(r'([.].+)',"",self.tree_file_2)+ '",sep="")' + "\n")
-            qq_out.write('outfile_pdf <- paste("' + self.qqfileout + '.pdf",sep="")' + "\n")
+            #qq_out.write('outfile_pdf <- paste("' + self.qqfileout + '.pdf",sep="")' + "\n")
             qq_out.write('outfile_png <- paste("' + self.qqfileout + '.png",sep="")' + "\n")
-            qq_out.write('pdf(outfile_pdf)' + "\n")
-            qq_out.write('qqplot(data1$dist, data2$dist, plot.it = TRUE, main = plot_title, xlim = c(' + str(self.xlow) + ',' + str(self.xhigh) + '), ylim = c(' + str(self.ylow) + ',' + str(self.yhigh) + '), xlab = xlabel, ylab = ylabel, asp=1)' + "\n")
-            qq_out.write('abline(a=0,b=1,untf=FALSE)' + "\n")
-            qq_out.write('dev.off()' + "\n")
+            #qq_out.write('pdf(outfile_pdf)' + "\n")
+            #qq_out.write('qqplot(data1$dist, data2$dist, plot.it = TRUE, main = plot_title, xlim = c(' + str(self.xlow) + ',' + str(self.xhigh) + '), ylim = c(' + str(self.ylow) + ',' + str(self.yhigh) + '), xlab = xlabel, ylab = ylabel, asp=1)' + "\n")
+            #qq_out.write('abline(a=0,b=1,untf=FALSE)' + "\n")
+            #qq_out.write('dev.off()' + "\n")
             qq_out.write('png(outfile_png,width=1000,height=1000)' + "\n")
             qq_out.write('qqplot(data1$dist, data2$dist, plot.it = TRUE, main = plot_title, xlim = c(' + str(self.xlow) + ',' + str(self.xhigh) + '), ylim = c(' + str(self.ylow) + ',' + str(self.yhigh) + '), ylab = ylabel,asp=1)' + "\n")
             qq_out.write('abline(a=0,b=1,untf=FALSE)' + "\n")
@@ -132,10 +132,12 @@ class distribcompare(object):
         else:
             print "Skipping R script generation - already done"
         if not os.path.exists(self.qqfileout + ".pdf" or self.qqfileout + ".png"):
-            command = 'rscript ' + self.qqfileout + ".r"
+            command = 'C:/Program Files/R/R-3.2.3/bin/rscript.exe ' + self.qqfileout + ".r"
             subprocess.call(command.split())
         else:
             print "Skipping QQ Plot generation - already done"
+            
+            
             
     def qq_plot_tobase(self):
         os.chdir(self.qqdir)
@@ -148,12 +150,15 @@ class distribcompare(object):
             qq_out.write('plot_title <- paste("QQ Plot for ' +  re.sub(r'([.].+)',"",self.tree_file_1) +  " and " + re.sub(r'([.].+)',"",self.tree_file_2) +  '",sep="")' + "\n")
             qq_out.write('xlabel <- paste("Distance to Base Tree for ' + re.sub(r'([.].+)',"",self.tree_file_1)+ '",sep="")' + "\n")
             qq_out.write('ylabel <- paste("Distance to Base Tree for ' + re.sub(r'([.].+)',"",self.tree_file_2)+ '",sep="")' + "\n")
-            qq_out.write('outfile_pdf <- paste("' + self.qqfileoutbase + '.pdf",sep="")' + "\n")
+            
+            #qq_out.write('outfile_pdf <- paste("' + self.qqfileoutbase + '.pdf",sep="")' + "\n")
+            
+            
+            #qq_out.write('pdf(outfile_pdf)' + "\n")
+            #qq_out.write('qqplot(data1$dist, data2$dist, plot.it = TRUE, main = plot_title, xlim = c(' + str(self.xlow) + ',' + str(self.xhigh) + '), ylim = c(' + str(self.ylow) + ',' + str(self.yhigh) + '), xlab = xlabel, ylab = ylabel, asp=1)' + "\n")
+            #qq_out.write('abline(a=0,b=1,untf=FALSE)' + "\n")
+            #qq_out.write('dev.off()' + "\n")
             qq_out.write('outfile_png <- paste("' + self.qqfileoutbase + '.png",sep="")' + "\n")
-            qq_out.write('pdf(outfile_pdf)' + "\n")
-            qq_out.write('qqplot(data1$dist, data2$dist, plot.it = TRUE, main = plot_title, xlim = c(' + str(self.xlow) + ',' + str(self.xhigh) + '), ylim = c(' + str(self.ylow) + ',' + str(self.yhigh) + '), xlab = xlabel, ylab = ylabel, asp=1)' + "\n")
-            qq_out.write('abline(a=0,b=1,untf=FALSE)' + "\n")
-            qq_out.write('dev.off()' + "\n")
             qq_out.write('png(outfile_png,width=1000,height=1000)' + "\n")
             qq_out.write('qqplot(data1$dist, data2$dist, plot.it = TRUE, main = plot_title, xlim = c(' + str(self.xlow) + ',' + str(self.xhigh) + '), ylim = c(' + str(self.ylow) + ',' + str(self.yhigh) + '), xlab = xlabel, ylab = ylabel, asp=1)' + "\n")
             qq_out.write('abline(a=0,b=1,untf=FALSE)' + "\n")
@@ -162,11 +167,10 @@ class distribcompare(object):
         else:
             print "Skipping R script generation - already done"
         if not os.path.exists(self.qqfileout + ".pdf" or self.qqfileoutbase + ".png"):
-            command = 'rscript ' + self.qqfileoutbase + ".r"
+            command = 'C:/Program Files/R/R-3.2.3/bin/rscript.exe ' + self.qqfileoutbase + ".r"
             subprocess.call(command.split())
         else:
             print "Skipping QQ Plot generation - already done"
-        
         
         
         

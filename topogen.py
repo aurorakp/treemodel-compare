@@ -11,7 +11,8 @@ if __name__ == '__main__':
     
     basedir = "c:/seqgen/"
     os.chdir(basedir)
-    models = ["bayes","raxml","phyml"]
+    #models = ["bayes","raxml","phyml"]
+    models = ["BEAST"]
     topodir = "split_by_topology/"
     topoprefix = "/topo.txt"
     # Compare topologies
