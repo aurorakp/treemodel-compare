@@ -45,7 +45,17 @@ class MrBayesObj(object):
         self.rawTreeout()
         self.extractBest()
         self.bestTreeout()
+        self.removeExes()
         
+    def runAllYeast(self):
+        self.prep(False)
+        self.prepScript()
+        self.run()
+        self.rawTreeout()
+        self.extractBest()
+        self.bestTreeout()
+        self.removeExes()
+    
     def runTreeouts(self):
         '''
         Only creates treeouts - one with 1000 trees and another with best tree plus 1000 trees
@@ -74,7 +84,22 @@ class MrBayesObj(object):
             shutil.copyfile(self.treedir + "/" + self.tree + ".nex",self.treedir + self.modeldir + self.tree + ".nex")
         else:
             print("Tree and NEXUS files already copied for " + self.tree)
-        
+    
+    def removeExes(self):
+        bayes_dir = self.treedir + self.modeldir
+        os.chdir(bayes_dir)
+        if os.path.exists(bayes_dir + "hmsbeagle32.dll"):
+            os.remove("hmsbeagle32.dll")
+            os.remove("hmsbeagle64.dll")
+            os.remove("hmsbeagle-cpu32-21.dll")
+            os.remove("hmsbeagle-cpu64-21.dll")
+            os.remove("hmsbeagle-cpu-sse32-21.dll")
+            os.remove("hmsbeagle-cpu-sse64-21.dll")
+            os.remove("hmsbeagle-cuda32-21.dll")
+            os.remove("hmsbeagle-cuda64-21.dll")
+            os.remove("hmsbeagle-opencl32-21.dll")
+            os.remove("hmsbeagle-opencl64-21.dll")
+            os.remove("mrbayes_x64.exe")
         
     def prepScript(self, nst=6, rates="invgamma", ngen=5000000, samplefreq=1000):
         if not os.path.exists(self.treedir + self.modeldir + self.tree + "-command.nex"):

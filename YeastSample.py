@@ -15,7 +15,7 @@ class YeastSample(object):
     '''
 
 
-    def __init__(self, geneNum=1,basedir = "c:/seqgen"):
+    def __init__(self, geneNum=1,seedNum=1,basedir = "c:/seqgen"):
         '''
         
         '''
@@ -23,10 +23,11 @@ class YeastSample(object):
         self.yeastPath = basedir + "/" + self.yeastFile
         self.yeastGenes = self.loadYeast()
         self.geneNum = geneNum
+        self.seedNum = seedNum
         self.geneList = self.createGeneList(self.geneNum)
-        self.sampleOut = "yeast_" + str(self.geneNum) + "_genes.nex"
+        self.sampleOut = "yeast_" + str(self.geneNum) + "_genes_" + str(self.seedNum) + "_seed.nex"
         self.samplePath = basedir + "/" + self.sampleOut
-        self.sampleInfo = "yeast_" + str(self.geneNum) + "_genes_info.nex"
+        self.sampleInfo = "yeast_" + str(self.geneNum) + "_genes_" + str(self.seedNum) + "info.nex"
         self.sampleInfoOut = basedir + "/" + self.sampleInfo
         self.concatOut = "yeast_" + str(self.geneNum) + "_concat_genes.nex"
         self.concatPath = basedir + "/" + self.concatOut
@@ -44,7 +45,7 @@ class YeastSample(object):
         infile.close()
         return yeastGenes
     
-    def createGeneList(self, num):
+    def createGeneList(self,num):
         if (num > len(self.yeastGenes)):
             raise ValueError("Yeast dataset is only " + str(len(self.yeastgenes)) + " members long")
         if (num == 0):
@@ -53,7 +54,7 @@ class YeastSample(object):
         ## so we're creating a new list for shuffling here:
         yeastTemp = list(self.yeastGenes)
         ## Set random number seed for reproducibility
-        seed(96618)
+        seed(self.seedNum)
         shuffle(yeastTemp)
         geneList = yeastTemp[0:num]
         return geneList
