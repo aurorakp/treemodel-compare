@@ -6,7 +6,7 @@ from PhyMLObj import PhyMLObj
 if __name__ == '__main__':
     treelist = ["edge01CDE","edge02CDE","edge04CDE","edge06CDE","edge08CDE","edge10CDE"]
     
-    treelist = ["leaf01sameedges","leaf02sameedges","leaf04sameedges","leaf06sameedges","leaf08sameedges","leaf10sameedges"]
+    #treelist = ["leaf01sameedges","leaf02sameedges","leaf04sameedges","leaf06sameedges","leaf08sameedges","leaf10sameedges"]
     
     for t in treelist: 
          
